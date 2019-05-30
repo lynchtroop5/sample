@@ -1,0 +1,92 @@
+<div class="articles-page" (window:scroll)="trendingScroll($event)">
+  <div class="articles-page-content">
+    <!-- ERROR MESSAGE HERE -->
+    <section *ngIf="error">
+      <div class="loading-container">
+        <span class="loading-text">The article you are trying to reach is unavailable. You will be redirected to your previous page shortly.</span>
+      </div>
+    </section>
+    <!-- LOADING ICON -->
+    <loading-component *ngIf="!articleData && !error"></loading-component>
+    <!-- ARTICLE PAGE BEGINS -->
+      <span *ngIf="articleData">
+          <share-links-component *ngIf="articleData.rawUrl" class="articles-page-padding" [shareUrl]="articleData.rawUrl"></share-links-component>
+          <h1 class="articles-page-title col-xs-12"><span [innerHTML]="articleData.title | safeHtml"></span></h1>
+        <!--<sidekick-wrapper-ai [aiSidekick]="aiSidekick" [scope]="scope">-->
+        <!-- IF IMAGES ARE AVAILABLE AND NOT VIDEO -->
+            <section *ngIf="eventType != 'video'">
+              <div *ngIf="eventType == 'story'" class="carousel-container">
+                <images-media-carousel [imageData]="imageData" [copyright]="copyright"
+                                       [imageTitle]="imageTitle"></images-media-carousel>
+              </div>
+                  <span *ngIf="eventType != 'story' && eventType != 'video'">
+                    <div *ngIf="articleData['images']['imageData']"
+                         class="carousel-container">
+                      <images-media-carousel [isProfilePage]="false"
+                                             [imageData]="articleData['images']['imageData']"
+                                             [copyright]="articleData['images']['copyright']"
+                                             [imageTitle]="articleData['images']['imageTitle']"></images-media-carousel>
+                    </div>
+                  </span>
+            </section>
+        <!-- IF ARTICLE TYPE IS VIDEO -->
+            <section *ngIf="eventType == 'video'" class="videoFrame">
+              <iframe *ngIf="iframeUrl" width="100%" height="100%" [src]="iframeUrl | safeRUrl" frameborder="0"
+                      allowfullscreen></iframe>
+            </section>
+
+            <section class="articles-page-container row">
+              <div class="arpt col-xs-12 col-xl-9">
+                <!-- ARTICLE INFORMATION -->
+                <section class="arpt-info">
+                  <div *ngIf="eventType == 'story' && articleData.publisher" class="arpt-author">Written By:
+                    <span class="text-master" [innerHTML]="articleData.publisher | safeHtml"></span></div>
+                  <div class="arpt-date">Posted on: <span [innerHTML]="date | safeHtml"></span></div>
+                </section>
+                <!-- DISPLAY ARTICLE -->
+                <article-content-component *ngIf="eventType != 'story' && eventType != 'video'"
+                                           class="articles-page-padding"
+                                           [articleType]="articleData.articleType"
+                                           [articleSubType]="articleData.articleSubType"
+                                           [articleData]="articleData['articleContent']"
+                                           [teamId]="articleData.teamId"
+                                           [imageLinks]="articleData.imageLinks"
+                                           [partnerId]="partnerId"
+                                           [scope]="scope">
+                </article-content-component>
+                <section *ngIf="eventType == 'story' || eventType == 'video'" class="arpt-main-article">
+                  <div class="content-exerpt" *ngIf="eventType == 'story'"
+                       [innerHTML]="articleData.teaser | safeHtml"></div>
+                  <div class="content-exerpt" *ngIf="eventType == 'video'"
+                       [innerHTML]="articleData.description | safeHtml"></div>
+                  <div class="bottom-shader" *ngIf="eventType == 'story'"></div>
+                  <a *ngIf="eventType == 'story'" class="mod-page-btn readMore" [href]="articleData.articleUrl"
+                     target="_blank">Read the Full Article <i class="fa fa-arrow-right"></i></a>
+                  <div [ngStyle]="{width: '100%', height:'5px','display':'block'}"></div>
+                </section>
+                <!-- RESPONSIVE WIDGET -->
+                <!--<sidekick-container-component></sidekick-container-component>-->
+                <!--<disqus-component *ngIf="!checkPartner"></disqus-component>-->
+                <recommendations-component *ngIf="randomHeadlines"
+                                           [randomHeadlines]="randomHeadlines"
+                                           [images]="images"
+                                           [isAiArticle]="isAiArticle">
+                </recommendations-component>
+                <trending-component [scope]="scope"
+                                    [currentArticleId]="eventID"
+                                    [eventType]="eventType"
+                                    [geoLocation]="geoLocation"
+                                    [showLoading]="showLoading"
+                                    [trendingData]="trendingData">
+                </trending-component>
+              </div>
+
+              <div class="vertical-widget col-lg-3" id="widgetContainer">
+                <widget-module [aiSidekick]="aiSidekick" [syndicated]="syndicated"
+                               [scope]="scope"></widget-module>
+              </div>
+            </section>
+        <!--</sidekick-wrapper-ai>-->
+      </span>
+  </div>
+</div>

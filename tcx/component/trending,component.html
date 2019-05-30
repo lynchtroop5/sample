@@ -1,0 +1,70 @@
+<div class="trending-small">
+  <div class="trending-small-hr-title"></div>
+  <div class="trending-small-container">
+    <div class="trending-small-container-main-title">TRENDING ARTICLES</div>
+  </div>
+  <div class="trending-small-hr-title" [ngStyle]="{'margin-bottom': '22px'}"></div>
+  <div *ngFor="let data of trendingData; let even=even; let i = index; let last = last">
+        <span *ngIf="i == 0">
+            <span class="featured-tag">FEATURED</span>
+        </span>
+    <share-links-component [shareUrl]="data.rawUrl"></share-links-component>
+    <div *ngIf="i == 0" class="featured-articles"><i class="fa fa-newspaper-o"></i><span>FEATURED ARTICLE</span>
+    </div>
+    <div class="trending-small-article">
+      <a [routerLink]="data.url" class="trending-small-article-title" *ngIf="!data.extUrl"
+         [innerHTML]="data.title | safeHtml">
+      </a>
+      <a [href]="data.url" class="trending-small-article-title" *ngIf="data.extUrl" [innerHTML]="data.title | safeHtml">
+
+      </a>
+      <div *ngIf="data.publisher != 'SNT Media'" class="trending-small-article-author">Written By: <span
+        class="trending-small-article-author-blue" [innerHTML]="data.author | safeHtml"></span>, &nbsp;<span
+        class="trending-small-article-author-blue" [innerHTML]="data.publisher | safeHtml"></span></div>
+      <div class="trending-small-article-date">Posted on: <span [innerHTML]="data.date | safeHtml"></span></div>
+      <div class="row">
+
+        <a *ngIf="!data.extUrl" [routerLink]="data.url"
+           class="trending-small-article-img col-sm-4 col-md-4 col-lg-6 image-fluid">
+          <img src="{{data.image}}"
+               onerror="this.src='/app/public/no-image.svg'"/>
+        </a>
+        <a *ngIf="data.extUrl" [href]="data.url"
+           class="trending-small-article-img col-sm-4 col-md-4 col-lg-6 image-fluid">
+          <img src="{{data.image}}"
+               onerror="this.src='/app/public/no-image.svg'"/>
+        </a>
+        <div class="col-sm-8 col-md-8 col-lg-6">
+          <div class="responsive-content">
+            <div class="responsive-content-text" [innerHTML]="data.teaser| safeHtml"></div>
+          </div>
+          <a *ngIf="!data.extUrl" [routerLink]="data.url" class="trending-small-article-read-more hide-new320">Read the
+            Story <i
+              class="fa fa-arrow-right margin"></i>
+          </a>
+          <a *ngIf="data.extUrl" [href]="data.url" class="trending-small-article-read-more hide-new320">Read the Story
+            <i
+              class="fa fa-arrow-right margin"></i>
+          </a>
+        </div>
+      </div>
+      <a *ngIf="!data.extUrl" [routerLink]="data.url" class="trending-small-article-read-more hide-768"
+         style="position: relative; margin-top: 10px">Read the Story <i
+        class="fa fa-arrow-right margin"></i>
+      </a>
+      <a *ngIf="data.extUrl" [href]="data.url" class="trending-small-article-read-more hide-768"
+         style="position: relative; margin-top: 10px">Read the Story <i
+        class="fa fa-arrow-right margin"></i>
+      </a>
+    </div>
+    <div class="trending-small-hr"></div>
+    <div class="responsive-widget">
+      <sidekick-container-component
+        *ngIf="!even"
+        [scope]="scope">
+      </sidekick-container-component>
+    </div>
+    <div *ngIf="!even" class="trending-small-hr hide-under-lg"></div>
+    <load-more-button *ngIf="showLoading && last"></load-more-button>
+  </div>
+</div>
